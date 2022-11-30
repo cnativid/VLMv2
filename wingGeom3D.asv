@@ -1,4 +1,4 @@
-function [wingGeomX,wingGeomY,wingGeomZ,panelRX,panelRY,panelRZ,panelTX,panelTY,panelTZ,panelCPX,panelCPY,panelCPZ,nX,nY,nZ,S,AR] = wingGeom3D(data,cPanels,cfun,alpha)
+function [wingGeomX,wingGeomY,wingGeomZ,panelRX,panelRY,panelRZ,panelTX,panelTY,panelTZ,panelCPX,panelCPY,panelCPZ,nX,nY,nZ,] = wingGeom2D(data,cPanels,cfun,alpha)
 % last updated: 11/8/2022
 % data formatting: 
 %   for one section wing:
@@ -22,8 +22,6 @@ function [wingGeomX,wingGeomY,wingGeomZ,panelRX,panelRY,panelRZ,panelTX,panelTY,
     sectionc = data(:,3); % section chord
     sectiono = data(:,4); % section offset
     
-
-
     bPanels = sum(sectionp);
     wingGeomX = zeros(cPanels+1,bPanels+1);
     wingGeomY = zeros(1,bPanels+1);
@@ -40,12 +38,7 @@ function [wingGeomX,wingGeomY,wingGeomZ,panelRX,panelRY,panelRZ,panelTX,panelTY,
     wingGeomX = [flip(wingGeomX,2),wingGeomX(:,2:end)];
     wingGeomZ = [flip(wingGeomZ,2),wingGeomZ(:,2:end)];
     [wingGeomX,wingGeomY,wingGeomZ] = eulerangles(wingGeomX,wingGeomY,wingGeomZ,0,alpha,0);
-    b = 2*sum(sectionb);
-    S = sectionb'*(sectionc(1:end-1)+sectionc(2:end))
-    MAC = S/b;
-    AR = b^2/S
 
-    % VLM Geom
     panelRX = .75*wingGeomX(1:end-1,1:end-1)+.25*wingGeomX(2:end,1:end-1);
     panelRY = .75*wingGeomY(1:end-1,1:end-1)+.25*wingGeomY(2:end,1:end-1);
     panelRZ = .75*wingGeomZ(1:end-1,1:end-1)+.25*wingGeomZ(2:end,1:end-1);
@@ -73,9 +66,7 @@ function [wingGeomX,wingGeomY,wingGeomZ,panelRX,panelRY,panelRZ,panelTX,panelTY,
     nX = nX./normN;
     nY = nY./normN;
     nZ = nZ./normN;
-    
 
-    
     cfigure([.5,.5])
     hold on
     surf(wingGeomX,wingGeomY,wingGeomZ,'FaceColor','none','Displayname','Wing Geometry')
