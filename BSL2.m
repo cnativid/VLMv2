@@ -7,6 +7,9 @@ function [Wx,Wy,Wz] = BSL2(r1x,r1y,r1z,r2x,r2y,r2z,Gamma)
     pmag1 = (Gamma/(4*pi)).*(1./normr1+1./normr2)./(normr1.*normr2+r1x.*r2x+r1y.*r2y+r1z.*r2z);
     pmag2 = (Gamma/(4*pi))./(normr1.*(normr1-r1x));
     pmag3 = (Gamma/(4*pi))./(normr2.*(normr2-r2x));
+    
+    pmag1(isnan(pmag1)) = 0;
+  
     Wx = (r1y.*r2z-r1z.*r2y).*pmag1;
     Wy = (r1z.*r2x-r1x.*r2z).*pmag1 + r1z.*pmag2 - r2z.*pmag3;
     Wz = (r1x.*r2y-r1y.*r2x).*pmag1 - r1y.*pmag2 + r2y.*pmag3;

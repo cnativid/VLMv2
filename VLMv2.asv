@@ -32,15 +32,14 @@ format shortg
 %     NaN,NaN,1,0];
 pdata = [1,5,1,0;
     1,5,.968,0.008;
-    1,4,.866,0.033;
+    1,5,.866,0.033;
     .5,3,.661,0.085;
     .25,3,.484,0.129;
-    .125,2,.348,0.163;
-    0.0625,1,.248,0.188;
-    0.0625,1,.1761,0.206;
+    .125,3,.348,0.163;
+    .125,3,.248,0.188;
     NaN,NaN,0,0.25];
 
-cfun = {@(x) 0*sin(pi.*x),@(x) 0*sin(pi.*x),@(x) 0*sin(pi.*x),@(x) 0*sin(pi.*x),@(x) 0*sin(pi.*x),@(x) 0*sin(pi.*x),@(x) 0*sin(pi.*x),@(x) 0*sin(pi.*x),@(x) 0*sin(pi.*x)};
+cfun = {@(x) 0*sin(pi.*x),@(x) 0*sin(pi.*x),@(x) 0*sin(pi.*x),@(x) 0*sin(pi.*x),@(x) 0*sin(pi.*x),@(x) 0*sin(pi.*x),@(x) 0*sin(pi.*x),@(x) 0*sin(pi.*x)};
 cPanels = 10;
 
 U_inf = 1;
@@ -48,7 +47,7 @@ alpha = 10*pi/180;
 
 
 % solve!
-alpha = (0:10)*pi/180
+alpha = (0:2)*pi/180
 C_L = zeros(size(alpha))
 for i = 1:length(alpha)
     [wingGeomX,wingGeomY,wingGeomZ,panelRX,panelRY,panelRZ,panelTX,panelTY,panelTZ,panelCPX,panelCPY,panelCPZ,nX,nY,nZ,S,AR] = wingGeom3D(pdata,cPanels,cfun,alpha(i));
@@ -56,40 +55,36 @@ for i = 1:length(alpha)
     C_L(i) = VLMPOST(Gamma,wingGeomX,wingGeomY,panelRY,panelTY,S);
 end
 
-cfigure([.35,.5])
+cfigure([.5,.5])
 hold on
-plot(alpha*180/pi,C_L,DisplayName='VLM')
-plot([0,10],[0,2*pi/(1+2/AR)*10*pi/180],DisplayName='Finite wing theory')
-legend
-xlabel('alpha (deg)'); ylabel('C_L')
-grid on
-
+plot(alpha,C_L)
+plot([0,10],2*pi/(1+2/AR)*10)
 
 % % check w/ eq:
 % disp(alpha*2*pi/(1+2*pi/(pi*AR)))
 
-% fake visualization (will fix later)
-b = 2*sum(pdata(1:end-1,1));
-bPanels = 2*sum(pdata(1:end-1,2));
-nPanels = cPanels*bPanels;
-x = linspace(-5,50,50);
-y = linspace(-b,b,50);
-z = y;
-[X,Y,Z] = meshgrid(x,y,z);
-
-U=U_inf*ones(size(X));
-V=zeros(size(X));
-W=zeros(size(X));
-
-for p = 1:nPanels
-    [Ui,Vi,Wi]=BSL2(X-panelRX(p),Y-panelRY(p),Z-panelRZ(p),X-panelTX(p),Y-panelTY(p),Z-panelTZ(p),Gamma(p));
-    U = U + Ui;
-    V = V + Vi;
-    W = W + Wi;
-end
-cfigure([.5,.5])
-hold on
-surf(wingGeomX,wingGeomY,wingGeomZ,'FaceColor','none','Displayname','Wing Geometry')
-streamline(X,Y,Z,U,V,W,wingGeomX(end,:),wingGeomY(end,:),wingGeomZ(end,:),[.01,10^6])
-axis equal, axis tight
+% % fake visualization (will fix later)
+% b = 2*sum(pdata(1:end-1,1));
+% bPanels = 2*sum(pdata(1:end-1,2));
+% nPanels = cPanels*bPanels;
+% x = linspace(-5,50,50);
+% y = linspace(-b,b,50);
+% z = y;
+% [X,Y,Z] = meshgrid(x,y,z);
+% 
+% U=U_inf*ones(size(X));
+% V=zeros(size(X));
+% W=zeros(size(X));
+% 
+% for p = 1:nPanels
+%     [Ui,Vi,Wi]=BSL2(X-panelRX(p),Y-panelRY(p),Z-panelRZ(p),X-panelTX(p),Y-panelTY(p),Z-panelTZ(p),Gamma(p));
+%     U = U + Ui;
+%     V = V + Vi;
+%     W = W + Wi;
+% end
+% cfigure([.5,.5])
+% hold on
+% surf(wingGeomX,wingGeomY,wingGeomZ,'FaceColor','none','Displayname','Wing Geometry')
+% streamline(X,Y,Z,U,V,W,wingGeomX(end,:),wingGeomY(end,:),wingGeomZ(end,:),[.01,10^6])
+% axis equal, axis tight
 

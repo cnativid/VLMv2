@@ -75,7 +75,7 @@ function [wingGeomX,wingGeomY,wingGeomZ,panelRX,panelRY,panelRZ,panelTX,panelTY,
     nZ = nZ./normN;
     
 
-    
+    % plotting
     cfigure([.5,.5])
     hold on
     surf(wingGeomX,wingGeomY,wingGeomZ,'FaceColor','none','Displayname','Wing Geometry')
